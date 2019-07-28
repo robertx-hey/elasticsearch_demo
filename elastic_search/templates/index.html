@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap-theme.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/dropzone.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/global.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/github.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static '/sifou/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.css' %}">
+
+
+    <script src="{% static 'jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.js' %}"></script>
+
+
+    <style>
+        #d1 {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            width: 750px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap " id="searchPage">
+    <div class="post-topheader">
+        <div class="container">
+            <div class="block-for-right-border">
+                <form class="row">
+                    {% csrf_token %}
+                    <div class="col-md-8">
+                        <div>
+                            <input class="input-lg form-control" type="text" name="q"
+                                   placeholder="输入关键字搜索" autocomplete="off" id="query_text" oninput="f2()"
+                                   onblur="vis()">
+                        </div>
+
+                        <div id="d1">
+                            <div class="list-group" id="list_group">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2">
+                        <a id="search_btn" class="btn btn-info btn-lg btn-block search-btn">搜索</a>
+                    </div>
+                </form>
+                <ul class="search-category nav nav-tabs nav-tabs-primary">
+                    <li class="active"><a data-type="news">全部</a></li>
+                    <li><a data-type="news" class="fenlei">新闻</a></li>
+                    <li><a data-type="drive" class="fenlei">试驾</a></li>
+                    <li><a data-type="advice" class="fenlei">导购</a></li>
+                    <li><a data-type="drive" class="fenlei">试驾评测</a></li>
+                    <li><a data-type="culture" class="fenlei">文化</a></li>
+                    <li><a data-type="travels" class="fenlei">游记</a></li>
+                    <li><a data-type="tag" class="fenlei">标签</a></li>
+                    <li><a data-type="use" class="fenlei">用车</a></li>
+                    <li><a data-type="tech" class="fenlei">技术</a></li>
+                    <li><a data-type="ev" class="fenlei">新能源</a></li>
+                    <li><a data-type="tuning" class="fenlei">改装赛事</a></li>
+                </ul>
+            </div>
+        </div>
+    </div><!-- end .post-topheader -->
+    <div class="container mt15">
+        <div class="row">
+            <div class="col-md-8 main search-result" id="res">
+
+
+            </div>
+
+            <div class="col-md-4 side">
+                <div id="bdcs-frame-box"></div>
+                <ul class="list-unstyled"></ul>
+            </div>
+        </div>
+        <div class="text-center">
+            <ul class="pagination" id="fenye">
+
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+
+    function vis() {
+        $("#d1").css({'display': 'none'});
+    }
+
+    var Page = 1;
+    var Type = 'all';
+
+    //搜索提示框
+    function f2() {
+        $("#d1").css({'display': 'block'});
+        var text = $('#query_text').val();
+        // console.log(text);
+        $.get(
+            "/suggest/",
+            {
+                q: text,
+            },
+            function (data) {
+                var msg_list = data.msg_list;
+                if (msg_list) {
+
+                    $('#list_group').empty();
+                    $.each(data.msg_list, function (index, item) {
+                        if ($('#list_group').children().length <= 6) {
+                            $('#list_group').append('<a class="list-group-item">' + item + '</a>');
+                        }
+                    });
+
+                    $('#list_group a').on('mousedown', function () {
+                                    var text = $(this).text();
+
+                                    $('#query_text').text(text);
+
+                                    console.log($('#query_text').val());
+                                    console.log(Type);
+                                    console.log(Page);
+                                    var type1 = 'news';
+                                    foo(type1, Page);
+                                })
+                    }
+
+                }
+            )
+
+    }
+
+
+    function f1() {
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+        var text = $('#query_text').val();
+        console.log(text);
+        $.post("/search/",
+            {
+                q: text
+            },
+            function (data) {
+                $("#res").empty();
+                $('#res').append('<h3 class="h5 mt0 mb20 relatedObject-number relatedObject-number">总共' + data.total + '条搜索结果</h3>');
+
+                var lst = data.ret_list;
+
+                for (var i = 0; i < lst.length; i++) {
+                    var dic = lst[i]['_source'];
+                    var highlight = lst[i]['highlight'];
+                    console.log(lst[i]);
+
+
+                    $("#res").append('<section class="widget-blog" id="sec"><h2 class="h4"><a href="' + dic['url'] +
+                        '" target="_blank">' + highlight['title'] + '</a><span class="text-muted"></span></h2><p class="excerpt mt10">' +
+                        highlight['summary'] + '</p><p class="excerpt mt10">0 投票&nbsp;&nbsp;&nbsp;0 评论</p></section><img src="'
+                        + dic['img_url'] + '"/>');
+                    console.log(dic['url']);
+                }
+
+            });
+    }
+
+    function foo(Type, Page) {
+
+
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+        var text = $('#query_text').val();
+        console.log(111111111111,text);
+        $.get("/search/",
+            {
+                q: text,
+                page: Page,
+                type: Type
+            },
+            function (data) {
+                $("#res").empty();
+                $('#res').append('<h3 class="h5 mt0 mb20 relatedObject-number relatedObject-number">总共' + data.total + '条搜索结果</h3>');
+
+                var lst = data.ret_list;
+
+                for (var i = 0; i < lst.length; i++) {
+                    var dic = lst[i]['_source'];
+                    var highlight = lst[i]['highlight'];
+                    // console.log(lst[i]);
+
+
+                    $("#res").append('<section class="widget-blog" id="sec"><h2 class="h4"><a href="/My/' + dic['url'] +
+                        '" target="_blank">' + highlight['title'] + '</a><span class="text-muted"></span></h2><p class="excerpt mt10">' +
+                        highlight['summary'] + '</p><p class="excerpt mt10">0 投票&nbsp;&nbsp;&nbsp;0 评论</p></section>'
+                        {#+'<img src="'#}
+                        {#+ dic['img_url'] + '"/>'#}
+                    );
+                }
+
+                $("#fenye").html(data.page_html);
+                // 分页标签绑定事件
+                $("#fenye li").click(function () {
+                    u = $(this).attr('page');
+                    if (u) {
+                        foo(Type, $(this).attr('page'));
+                    }
+
+                });
+
+            });
+    }
+
+    $('.fenlei').on("click", function () {
+
+        var text = $('#query_text').val();
+        var type = $(this).attr('data-type');
+
+        $('li.active').removeClass('active');
+        $(this).parent().addClass('active');
+        foo(type, Page);
+
+    });
+
+    $("#search_btn").on("click", function () {
+        var text = $('#query_text').val();
+        var type = $(this).attr('data-type');
+
+        $('li.active').removeClass('active');
+        $(this).parent().addClass('active');
+        foo(type, Page);
+    })
+
+
+</script>
+</html>

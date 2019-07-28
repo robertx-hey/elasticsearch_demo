@@ -1,0 +1,276 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <script src="{% static 'jquery-2.2.3.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+
+    <style>
+        #xx p:hover {
+            background-color: #eeeeee;
+            cursor: pointer;
+        }
+
+        .oo {
+            position: absolute;
+            z-index: 999;
+            background-color: white;
+            width: 196px;
+            padding-left: 6px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">
+
+
+                </li>
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="搜，必达......" oninput="suggest()"
+                               id="searchMsg">
+                        <button type="button" class="btn btn-default" onclick="foo(actionType, Page)">搜索，走</button>
+                        <span id="totalNum"></span>
+                    </div>
+                    <div id="xx">
+                        {#                        <p>1</p>#}
+                        {#                        <p>2</p>#}
+                        {#                        <p>法拉利</p>#}
+                    </div>
+                </div>
+
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-lg-offset-2">
+            <ul class="nav nav-tabs" id="btnGroup">
+                <li class="active" tag="all"><a href="#">全部</a></li>
+                <li tag="news"><a href="#">新闻</a></li>
+                <li tag="advice"><a href="#">导购</a></li>
+                <li tag="drive"><a href="#">试驾评测</a></li>
+                <li tag="use"><a>用车</a></li>
+                <li tag="culture"><a>文化</a></li>
+                <li tag="travels"><a href="#">游记</a></li>
+                <li tag="tech"><a href="#">技术</a></li>
+                <li tag="tuning"><a href="#">改装赛事</a></li>
+                <li tag="ev"><a href="#">新能源</a></li>
+                <li tag="list"><a href="#">行业</a></li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-lg-offset-2">
+            <div id="showData">
+                {% for foo in all_obj %}
+                    <h3>{{ foo.title }}</h3>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-lg-offset-2">
+            <ul class="pagination" id="pagination">
+
+                {#    <li>#}
+                {#      <a href="#" aria-label="Previous">#}
+                {#        <span aria-hidden="true">&laquo;</span>#}
+                {#      </a>#}
+                {#    </li>#}
+                {#    <li><a href="#">1</a></li>#}
+                {#    <li><a href="#">2</a></li>#}
+                {#    <li><a href="#">3</a></li>#}
+                {#    <li><a href="#">4</a></li>#}
+                {#    <li><a href="#">5</a></li>#}
+                {#    <li>#}
+                {#      <a href="#" aria-label="Next">#}
+                {#        <span aria-hidden="true">&raquo;</span>#}
+                {#      </a>#}
+                {#    </li>#}
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+
+{#<nav aria-label="Page navigation">#}
+{#  #}
+{#</nav>#}
+{#<div class="container">#}
+{#    <div class="row"></div>#}
+{#</div>#}
+
+
+</body>
+
+<script>
+    // 搜索
+    var actionType = 'all';
+    var Page = 1;
+
+    function foo(actionType, Page) {
+        var searchMsg = $('#searchMsg').val();
+        $("#xx").empty().removeClass('oo');
+        // console.log(searchMsg, actionType);
+        $.ajax({
+            url: "/index/",
+            type: "GET",
+            data: {"search_msg": searchMsg, "flag": 'xxxx', 'action_type': actionType, 'current_page': Page},
+            success: function (data) {
+                // console.log(11111111111111, data);
+                if (data) {
+                    // 展示结果条数
+                    $('#totalNum').html("结果约 <b style='color:red'>" + data.hits.total + "</b> 条结果")
+                    // 分页展示
+                    $("#pagination").html(data.page);
+
+                    // 结果展示
+                    var html = '';
+                    $.each(data.data_msg, function (index, item) {
+                        // console.log(item._source.title)
+                        html += '<a href="/f/' + item._source.title + '">\n' +
+                            '                                <div class="article-pic"><img src=""></div>\n' +
+                            '                                <h3>' + item.highlight.title + '</h3>\n' +
+                            '                                <div class="article-bar">\n' +
+                            '                                    <span class="fn-left"></span>\n' +
+                            '                                    <span class="fn-right">\n' +
+                            '                                        <em><i class="icon12 icon12-eye"></i></em>\n' +
+                            '                                        <em data-class="icon12 icon12-infor" data-articleid="936479"><i class="icon12 icon12-infor"></i>4</em>\n' +
+                            '                                    </span>\n' +
+                            '                                </div>\n' +
+                            '                                <p>' + item._source.summary + '</p>\n' +
+                            '                            </a>';
+                    });
+                    $("#showData").html(html);
+
+                    // 分页标签绑定事件
+                    $("#pagination li a").click(function () {
+                        console.log($(this).attr('page'));
+                        {#$('#btnGroup')#}
+                        var d = $(this).attr('page');
+                        if (d) {
+                            foo(actionType, $(this).attr('page'))
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+
+    // 标签分类
+    $("#btnGroup li").click(function () {
+        // console.log($(this).attr('tag'));
+        $(this).addClass('active').siblings().removeClass('active');
+        actionType = $(this).attr('tag');
+        foo($(this).attr('tag'), Page);
+    })
+
+    // 建议器
+
+
+    //
+
+    function suggest() {
+        var search_msg = $("#searchMsg").val();
+        if (search_msg == '') {
+            $("#xx").empty().removeClass('oo');
+        } else {
+            $("#xx").addClass('oo').css({'border':'0'});
+        }
+        $.ajax({
+            url: "/suggest/",
+            type: "POST",
+            data: {"search_msg": search_msg},
+            success: function (data) {
+                // console.log(111, data);
+                if (data) {
+                    var html = '';
+                    $.each(data, function (index, item) {
+                        html += "<p>" + item + "</p>"
+                    });
+                    $("#xx").html(html);
+                    $("#xx p").click(function () {
+                        var d = $(this).text();
+                        $('#searchMsg').val(d);
+                        foo(actionType, Page);
+                        // $("#xx").html('')
+                        $("#xx").empty().removeClass('oo');
+                    })
+                }
+            }
+        })
+    }
+
+
+</script>
+
+
+</html>
